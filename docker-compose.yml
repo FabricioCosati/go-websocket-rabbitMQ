@@ -6,8 +6,8 @@ services:
       - 15672:15672
     container_name: akichatting-rabbitmq
     environment:
-      - DEFAULT_USER=${RABBITMQ_USER}
-      - DEFAULT_PASS=${RABBITMQ_PASSWORD}
+      - DEFAULT_USER=${RABBITMQ_USER:-admin}
+      - DEFAULT_PASS=${RABBITMQ_PASSWORD:-admin}
     volumes:
       - ~/.docker-conf/rabbitmq/data/:/var/lib/rabbitmq/
       - ~/.docker-conf/rabbitmq/log/:/var/log/rabbitmq
