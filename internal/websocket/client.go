@@ -8,13 +8,8 @@ import (
 )
 
 type Client struct {
-	Hub  *Hub
 	Conn *websocket.Conn
 	Send chan []byte
-}
-
-type Message struct {
-	Message string
 }
 
 var upgrader = websocket.Upgrader{
@@ -24,7 +19,7 @@ var upgrader = websocket.Upgrader{
 	CheckOrigin:      websocket.IsWebSocketUpgrade,
 }
 
-func InitClient(ctx *gin.Context, hub *Hub) (*Client, error) {
+func InitClient(ctx *gin.Context) (*Client, error) {
 	var client Client
 	conn, err := upgrader.Upgrade(ctx.Writer, ctx.Request, ctx.Request.Trailer)
 	if err != nil {
@@ -32,16 +27,7 @@ func InitClient(ctx *gin.Context, hub *Hub) (*Client, error) {
 	}
 
 	client.Conn = conn
-	client.Hub = hub
 	client.Send = make(chan []byte, 256)
 
 	return &client, nil
-}
-
-func (c *Client) Register() {
-	c.Hub.Register <- c
-}
-
-func (c *Client) Unregister() {
-	c.Hub.Unregister <- c
 }

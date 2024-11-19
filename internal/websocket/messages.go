@@ -2,44 +2,14 @@ package websocket
 
 import (
 	"fmt"
+	"log"
 
 	"github.com/gin-gonic/gin"
 	"github.com/gorilla/websocket"
 	amqp "github.com/rabbitmq/amqp091-go"
 )
 
-func (c *Client) ReadMessages() {
-	for {
-		_, m, err := c.Conn.ReadMessage()
-		if err != nil {
-			fmt.Printf("error on read messages: %s", err)
-			break
-		}
-
-		c.Hub.Broadcast <- m
-	}
-}
-
-func (c *Client) WriteMessages() {
-	for {
-		select {
-		case m, ok := <-c.Send:
-			if !ok {
-				fmt.Printf("error on receive broadcast message")
-				c.Conn.WriteMessage(websocket.CloseMessage, []byte{})
-				break
-			}
-
-			err := c.Conn.WriteMessage(websocket.TextMessage, m)
-			if err != nil {
-				fmt.Printf("error on write message: %s", err)
-				break
-			}
-		}
-	}
-}
-
-func (c *Client) InitReading(ctx *gin.Context, ch *amqp.Channel) {
+func (c *Client) SendMessage(ctx *gin.Context, ch *amqp.Channel) {
 	for {
 		_, m, err := c.Conn.ReadMessage()
 		if err != nil {
@@ -61,7 +31,20 @@ func (c *Client) InitReading(ctx *gin.Context, ch *amqp.Channel) {
 	}
 }
 
-func (c *Client) InitSending(msgs <-chan amqp.Delivery) error {
+func (c *Client) ReadMessage(ch *amqp.Channel, qn string) {
+	msgs, err := ch.Consume(
+		qn,
+		"",
+		true,
+		true,
+		false,
+		false,
+		nil,
+	)
+	if err != nil {
+		log.Fatalf("error on init consumer: %s", err)
+	}
+
 	for m := range msgs {
 		err := c.Conn.WriteMessage(websocket.TextMessage, m.Body)
 		if err != nil {
@@ -69,6 +52,4 @@ func (c *Client) InitSending(msgs <-chan amqp.Delivery) error {
 			break
 		}
 	}
-
-	return nil
 }
