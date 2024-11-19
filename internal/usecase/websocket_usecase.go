@@ -2,6 +2,7 @@ package usecase
 
 import (
 	"fmt"
+	"sync"
 
 	"github.com/FabricioCosati/go-websocket-rabbitMQ/internal/websocket"
 	"github.com/gin-gonic/gin"
@@ -19,6 +20,8 @@ func ConnectWs(ctx *gin.Context) error {
 		return err
 	}
 
+	defer amqp.CloseAmqp()
+
 	err = amqp.InitExchange()
 	if err != nil {
 		fmt.Printf("error on init rabbitmq exchange: %s", err)
@@ -30,8 +33,11 @@ func ConnectWs(ctx *gin.Context) error {
 		return err
 	}
 
-	go client.SendMessage(ctx, amqp.Channel)
-	go client.ReadMessage(amqp.Channel, amqp.Queue.Name)
+	var wg sync.WaitGroup
+	wg.Add(2)
+	go client.SendMessage(ctx, amqp.Channel, &wg)
+	go client.ReadMessage(amqp.Channel, amqp.Queue.Name, &wg)
+	wg.Wait()
 
 	return nil
 }

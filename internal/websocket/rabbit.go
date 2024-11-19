@@ -34,6 +34,11 @@ func InitAmqp() (*Amqp, error) {
 	}, nil
 }
 
+func (a *Amqp) CloseAmqp() {
+	a.Conn.Close()
+	a.Channel.Close()
+}
+
 func (a *Amqp) InitExchange() error {
 	err := a.Channel.ExchangeDeclare(
 		"chat",

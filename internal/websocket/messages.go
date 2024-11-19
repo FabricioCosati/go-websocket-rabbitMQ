@@ -3,13 +3,15 @@ package websocket
 import (
 	"fmt"
 	"log"
+	"sync"
 
 	"github.com/gin-gonic/gin"
 	"github.com/gorilla/websocket"
 	amqp "github.com/rabbitmq/amqp091-go"
 )
 
-func (c *Client) SendMessage(ctx *gin.Context, ch *amqp.Channel) {
+func (c *Client) SendMessage(ctx *gin.Context, ch *amqp.Channel, wg *sync.WaitGroup) {
+	defer wg.Done()
 	for {
 		_, m, err := c.Conn.ReadMessage()
 		if err != nil {
@@ -31,7 +33,8 @@ func (c *Client) SendMessage(ctx *gin.Context, ch *amqp.Channel) {
 	}
 }
 
-func (c *Client) ReadMessage(ch *amqp.Channel, qn string) {
+func (c *Client) ReadMessage(ch *amqp.Channel, qn string, wg *sync.WaitGroup) {
+	defer wg.Done()
 	msgs, err := ch.Consume(
 		qn,
 		"",
