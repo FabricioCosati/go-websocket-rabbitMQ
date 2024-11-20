@@ -20,7 +20,7 @@ func InitApp(cfg config.Config) (*App, error) {
 	websocketClientService := websocket.InitWebsocketClientService()
 	websocketUsecaseImpl := usecase.InitWebsocketUsecase(websocketBrokerServiceImpl, websocketClientService)
 	websocketHandlerImpl := handlers.InitWebsocketHandler(websocketUsecaseImpl)
-	websocketInit := NewWebsocketInit(websocketBrokerServiceImpl, websocketClientService, websocketUsecaseImpl, websocketHandlerImpl)
+	websocketInit := NewWebsocketInit(websocketHandlerImpl)
 	app := NewApp(websocketInit)
 	return app, nil
 }

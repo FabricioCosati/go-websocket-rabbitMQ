@@ -29,22 +29,13 @@ var WebsocketProviders = wire.NewSet(
 )
 
 type WebsocketInit struct {
-	WebsocketBrokerService websocket.WebsocketBrokerService
-	WebsocketClientService websocket.WebsocketClientService
-	WebsocketUsecase       usecase.WebsocketUsecase
-	WebsocketHandler       handlers.WebsocketHandler
+	WebsocketHandler handlers.WebsocketHandler
 }
 
 func NewWebsocketInit(
-	WebsocketBrokerService websocket.WebsocketBrokerService,
-	WebsocketClientService websocket.WebsocketClientService,
-	WebsocketUsecase usecase.WebsocketUsecase,
 	WebsocketHandler handlers.WebsocketHandler,
 ) *WebsocketInit {
 	return &WebsocketInit{
-		WebsocketBrokerService: WebsocketBrokerService,
-		WebsocketClientService: WebsocketClientService,
-		WebsocketUsecase:       WebsocketUsecase,
-		WebsocketHandler:       WebsocketHandler,
+		WebsocketHandler: WebsocketHandler,
 	}
 }
