@@ -2,7 +2,7 @@ import { lazy } from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { PATH } from './constants/paths';
 
-const Home = lazy(() => import('./pages/Home'))
+const Home = lazy(() => import('./pages/Home/home'))
 
 function App() {
   return (
