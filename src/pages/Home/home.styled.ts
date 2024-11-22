@@ -115,10 +115,10 @@ export const SubmitChatInput = styled.textarea`
 
 export const SubmitChatButton = styled(Button)`
     && {
-        background-color: #1f1f1f;
+        background-color: #7600ad;
 
         &:hover {
-            background-color: #131313;
+            background-color: #8a00ca;
         }
     }
 `
