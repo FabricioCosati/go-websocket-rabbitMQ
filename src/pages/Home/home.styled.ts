@@ -111,8 +111,10 @@ export const SubmitChatInput = styled.textarea`
     &:focus{
         outline: none;
     }
+    &::placeholder {
+        color: #9c9c9c;
+    }
 `
-
 export const SubmitChatButton = styled(Button)`
     && {
         background-color: #7600ad;
