@@ -1,6 +1,7 @@
 package websocket
 
 import (
+	"encoding/json"
 	"time"
 
 	"fmt"
@@ -30,6 +31,17 @@ var upgrader = websocket.Upgrader{
 	CheckOrigin:      websocket.IsWebSocketUpgrade,
 }
 
+type Message struct {
+	User    User
+	Message string
+	Time    string
+}
+
+type User struct {
+	Name  string
+	Photo string
+}
+
 func (impl *WebsocketClientServiceImpl) InitClient(ctx *gin.Context) (*Client, error) {
 	var client Client
 	conn, err := upgrader.Upgrade(ctx.Writer, ctx.Request, ctx.Request.Trailer)
@@ -53,6 +65,22 @@ func (c *Client) SendMessage(ctx *gin.Context, ch *amqp.Channel, wg *sync.WaitGr
 		_, m, err := c.Conn.ReadMessage()
 		if err != nil {
 			fmt.Printf("error on read messages: %s", err)
+			break
+		}
+
+		var body Message
+		err = json.Unmarshal(m, &body)
+		if err != nil {
+			fmt.Printf("error on decode body: %s", err)
+			break
+		}
+
+		body.Time = time.Now().Format("15:04")
+		body.User.Photo = "guest.png"
+
+		m, err = json.Marshal(body)
+		if err != nil {
+			fmt.Printf("error on encode body: %s", err)
 			break
 		}
 

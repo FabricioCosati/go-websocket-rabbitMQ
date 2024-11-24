@@ -1,3 +1,4 @@
 export interface UserDto {
-    name: string
+    Name: string
+    Photo?: string
 }

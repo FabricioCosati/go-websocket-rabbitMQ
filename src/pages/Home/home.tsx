@@ -2,7 +2,7 @@ import { useEffect, useState } from "react"
 import useWebSocket from "react-use-websocket"
 import { MessageDto } from "../../dtos/message"
 import { UserDto } from "../../dtos/user"
-import { ChatContainer, HomepageContainer, MessagesContainer, SubmitChatButton, SubmitChatFormContainer, SubmitChatInput } from "./home.styled"
+import { ChatContainer, HomepageContainer, MessageContainer, MessagesContainer, MessagesUserPhoto, MessageText, MessageUser, SubmitChatButton, SubmitChatFormContainer, SubmitChatInput } from "./home.styled"
 
 function Home() {
     const [text, setText] = useState<string>("")
@@ -20,11 +20,11 @@ function Home() {
         }
 
         const user: UserDto = {
-            name: "guest"
+            Name: "guest"
         }
         const messageToSend: MessageDto = {
-            user: user,
-            message: text
+            User: user,
+            Message: text
         }
 
         sendJsonMessage(messageToSend)
@@ -53,10 +53,15 @@ function Home() {
             <ChatContainer>
                 <MessagesContainer>
                     {messages && messages.map((message: MessageDto, index: number) => (
-                        <div key={index}>
-                            <div className="messageUser">{message.user.name} </div>
-                            <div className="messageText">{message.message}</div>
-                        </div>
+                        <MessageContainer key={index}>
+                            <MessagesUserPhoto>
+                                <img src={require("../../imgs/" + message.User.Photo)} alt="guest-user" />
+                            </MessagesUserPhoto>
+                            <div key={index}>
+                                <MessageUser className="messageUser">{message.User.Name} <div>{message.Time}</div></MessageUser>
+                                <MessageText className="messageText">{message.Message}</MessageText>
+                            </div>
+                        </MessageContainer>
                     ))}
                 </MessagesContainer>
                 <form method="post" onSubmit={(e) => sendMessage(e)}>

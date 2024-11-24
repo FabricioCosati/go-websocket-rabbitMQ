@@ -41,7 +41,7 @@ export const HomepageContainer = styled.div`
     }
 
     ::-webkit-scrollbar {
-        width: 12px;
+        width: 0.75rem;
     }
 
     ::-webkit-scrollbar-track {
@@ -80,6 +80,38 @@ export const MessagesContainer = styled.div`
     white-space: normal;
     box-sizing: border-box;
     overflow-y: auto;
+    font-size: 1rem;
+`
+
+export const MessageContainer = styled.div`
+    display: flex;
+    gap: 1rem;
+    margin: 1rem;
+`
+
+export const MessagesUserPhoto = styled.div`
+    img {
+        width: 40px;
+        height: 40px;
+        background-color: #ececec;
+        border-radius: .5rem;
+        margin-top: 0.25rem;
+    }
+`
+
+export const MessageUser = styled.div`
+    font-weight: bold;
+    display: flex;
+    gap: .5rem;
+
+    div {
+        font-weight: normal;
+        font-size: 0.875rem;
+        color: #c9c9c9;
+    }
+`
+
+export const MessageText = styled.div`
 `
 
 // Separar em outro arquivo depois - tudo acima e abaixo
@@ -104,7 +136,7 @@ export const SubmitChatInput = styled.textarea`
     padding-bottom: 8px;
     border: 0px;
     border: none;
-    font-size: 16px;
+    font-size: 1rem;
     resize: none;
     overflow: hidden;
     box-sizing: border-box;
