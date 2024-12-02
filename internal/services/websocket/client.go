@@ -13,7 +13,7 @@ import (
 )
 
 type WebsocketClientService interface {
-	InitClient(ctx *gin.Context) (*Client, error)
+	InitClient(ctx *gin.Context, hub *Hub) (*Client, error)
 	ConsumeQueueMessages(ctch *amqp.Channel, qn string) (<-chan amqp.Delivery, error)
 }
 
@@ -22,6 +22,7 @@ type WebsocketClientServiceImpl struct{}
 type Client struct {
 	Conn *websocket.Conn
 	Send chan []byte
+	Hub  *Hub
 }
 
 var upgrader = websocket.Upgrader{
@@ -42,7 +43,7 @@ type User struct {
 	Photo string
 }
 
-func (impl *WebsocketClientServiceImpl) InitClient(ctx *gin.Context) (*Client, error) {
+func (impl *WebsocketClientServiceImpl) InitClient(ctx *gin.Context, hub *Hub) (*Client, error) {
 	var client Client
 	conn, err := upgrader.Upgrade(ctx.Writer, ctx.Request, ctx.Request.Trailer)
 	if err != nil {
@@ -51,6 +52,7 @@ func (impl *WebsocketClientServiceImpl) InitClient(ctx *gin.Context) (*Client, e
 
 	client.Conn = conn
 	client.Send = make(chan []byte, 256)
+	client.Hub = hub
 
 	return &client, nil
 }
@@ -58,13 +60,16 @@ func (impl *WebsocketClientServiceImpl) InitClient(ctx *gin.Context) (*Client, e
 func (c *Client) SendMessage(ctx *gin.Context, ch *amqp.Channel, wg *sync.WaitGroup) {
 	defer func() {
 		wg.Done()
+		c.Hub.UnRegisterClient(c)
 		c.Conn.Close()
 	}()
 
 	for {
 		_, m, err := c.Conn.ReadMessage()
 		if err != nil {
-			fmt.Printf("error on read messages: %s", err)
+			if websocket.IsUnexpectedCloseError(err, websocket.CloseGoingAway, websocket.CloseAbnormalClosure) {
+				fmt.Printf("error on read messages: %s", err)
+			}
 			break
 		}
 
@@ -105,7 +110,14 @@ func (c *Client) ReadMessage(msgs <-chan amqp.Delivery, wg *sync.WaitGroup) {
 	}()
 
 	for m := range msgs {
-		err := c.Conn.WriteMessage(websocket.TextMessage, m.Body)
+		w, err := c.Conn.NextWriter(websocket.TextMessage)
+		if err != nil {
+			return
+		}
+
+		w.Write(m.Body)
+		err = w.Close()
+
 		if err != nil {
 			fmt.Printf("error on write message: %s", err)
 			break

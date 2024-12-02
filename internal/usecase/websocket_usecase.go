@@ -15,16 +15,20 @@ type WebsocketUsecase interface {
 type WebsocketUsecaseImpl struct {
 	BrokerService websocket.WebsocketBrokerService
 	ClientService websocket.WebsocketClientService
+	Hub           *websocket.Hub
 }
 
 func (impl *WebsocketUsecaseImpl) ConnectWs(ctx *gin.Context) error {
+	hub := impl.Hub
 	brokerService := impl.BrokerService
 	clientService := impl.ClientService
 
-	client, err := clientService.InitClient(ctx)
+	client, err := clientService.InitClient(ctx, hub)
 	if err != nil {
 		return err
 	}
+
+	hub.RegisterClient(client)
 
 	amqp, err := brokerService.InitAmqp()
 	if err != nil {
@@ -63,9 +67,11 @@ func (impl *WebsocketUsecaseImpl) ConnectWs(ctx *gin.Context) error {
 func InitWebsocketUsecase(
 	brokerService websocket.WebsocketBrokerService,
 	clientService websocket.WebsocketClientService,
+	hub *websocket.Hub,
 ) *WebsocketUsecaseImpl {
 	return &WebsocketUsecaseImpl{
 		BrokerService: brokerService,
 		ClientService: clientService,
+		Hub:           hub,
 	}
 }

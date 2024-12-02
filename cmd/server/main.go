@@ -16,6 +16,11 @@ func main() {
 	}
 
 	app, err := di.InitApp(cfg)
+	if err != nil {
+		log.Fatal("error on init application: %s", err)
+	}
+
+	go app.WebsocketInit.Hub.HubRun()
 
 	r := gin.New()
 	routes.InitWebsocket(r, app)

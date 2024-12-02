@@ -18,9 +18,10 @@ import (
 func InitApp(cfg config.Config) (*App, error) {
 	websocketBrokerServiceImpl := websocket.InitWebsocketBrokerService(cfg)
 	websocketClientService := websocket.InitWebsocketClientService()
-	websocketUsecaseImpl := usecase.InitWebsocketUsecase(websocketBrokerServiceImpl, websocketClientService)
+	hub := websocket.HubInit()
+	websocketUsecaseImpl := usecase.InitWebsocketUsecase(websocketBrokerServiceImpl, websocketClientService, hub)
 	websocketHandlerImpl := handlers.InitWebsocketHandler(websocketUsecaseImpl)
-	websocketInit := NewWebsocketInit(websocketHandlerImpl)
+	websocketInit := NewWebsocketInit(websocketHandlerImpl, hub)
 	app := NewApp(websocketInit)
 	return app, nil
 }

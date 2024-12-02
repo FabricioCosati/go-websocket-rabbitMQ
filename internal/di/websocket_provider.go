@@ -20,22 +20,31 @@ var WebsocketHandler = wire.NewSet(
 	wire.Bind(new(handlers.WebsocketHandler), new(*handlers.WebsocketHandlerImpl)),
 )
 
+var Hub = wire.NewSet(
+	websocket.HubInit,
+	wire.Bind(new(websocket.HubService), new(*websocket.Hub)),
+)
+
 var WebsocketProviders = wire.NewSet(
 	WebsocketBrokerService,
 	websocket.InitWebsocketClientService,
 	WebsocketUsecase,
 	WebsocketHandler,
+	Hub,
 	NewWebsocketInit,
 )
 
 type WebsocketInit struct {
 	WebsocketHandler handlers.WebsocketHandler
+	Hub              *websocket.Hub
 }
 
 func NewWebsocketInit(
 	WebsocketHandler handlers.WebsocketHandler,
+	Hub *websocket.Hub,
 ) *WebsocketInit {
 	return &WebsocketInit{
 		WebsocketHandler: WebsocketHandler,
+		Hub:              websocket.HubInit(),
 	}
 }
