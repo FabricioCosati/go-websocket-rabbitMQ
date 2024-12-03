@@ -19,7 +19,6 @@ var WebsocketHandler = wire.NewSet(
 	handlers.InitWebsocketHandler,
 	wire.Bind(new(handlers.WebsocketHandler), new(*handlers.WebsocketHandlerImpl)),
 )
-
 var Hub = wire.NewSet(
 	websocket.HubInit,
 	wire.Bind(new(websocket.HubService), new(*websocket.Hub)),

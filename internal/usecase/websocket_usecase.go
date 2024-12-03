@@ -29,6 +29,7 @@ func (impl *WebsocketUsecaseImpl) ConnectWs(ctx *gin.Context) error {
 	}
 
 	hub.RegisterClient(client)
+	client.Id = len(hub.Clients)
 
 	amqp, err := brokerService.InitAmqp()
 	if err != nil {

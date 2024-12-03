@@ -6,9 +6,11 @@ import { SendJsonMessage } from "react-use-websocket/dist/lib/types";
 
 type Props = {
     sendJsonMessage: SendJsonMessage
+    user: UserDto
+
 }
 
-export default function ChatFormContainer({ sendJsonMessage }: Props) {
+export default function ChatFormContainer({ sendJsonMessage, user }: Props) {
     const [text, setText] = useState<string>("")
 
     function handleInput(e: React.KeyboardEvent<HTMLTextAreaElement>) {
@@ -24,9 +26,6 @@ export default function ChatFormContainer({ sendJsonMessage }: Props) {
             return
         }
 
-        const user: UserDto = {
-            Name: "guest"
-        }
         const messageToSend: MessageDto = {
             User: user,
             Message: text

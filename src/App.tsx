@@ -6,7 +6,7 @@ const Home = lazy(() => import('./pages/Home/home'))
 
 function App() {
   return (
-    <BrowserRouter basename={process.env.PUBLIC_URL}>
+    <BrowserRouter basename="/">
       <Routes>
         <Route path={PATH.HOME} Component={Home}></Route>
       </Routes>

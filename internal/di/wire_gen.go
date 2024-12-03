@@ -9,6 +9,7 @@ package di
 import (
 	"github.com/FabricioCosati/go-websocket-rabbitMQ/internal/config"
 	"github.com/FabricioCosati/go-websocket-rabbitMQ/internal/handlers"
+	"github.com/FabricioCosati/go-websocket-rabbitMQ/internal/services/redis"
 	"github.com/FabricioCosati/go-websocket-rabbitMQ/internal/services/websocket"
 	"github.com/FabricioCosati/go-websocket-rabbitMQ/internal/usecase"
 )
@@ -22,7 +23,11 @@ func InitApp(cfg config.Config) (*App, error) {
 	websocketUsecaseImpl := usecase.InitWebsocketUsecase(websocketBrokerServiceImpl, websocketClientService, hub)
 	websocketHandlerImpl := handlers.InitWebsocketHandler(websocketUsecaseImpl)
 	websocketInit := NewWebsocketInit(websocketHandlerImpl, hub)
-	app := NewApp(websocketInit)
+	redisClient := redis.NewRedisClient(cfg)
+	redisUsecaseImpl := usecase.InitRedisUsecase(redisClient, hub)
+	redisHandlerImpl := handlers.InitRedisHandler(redisUsecaseImpl)
+	redisInit := NewRedisInit(redisHandlerImpl)
+	app := NewApp(websocketInit, redisInit)
 	return app, nil
 }
 
@@ -30,10 +35,12 @@ func InitApp(cfg config.Config) (*App, error) {
 
 type App struct {
 	WebsocketInit *WebsocketInit
+	RedisInit     *RedisInit
 }
 
-func NewApp(websocketInit *WebsocketInit) *App {
+func NewApp(websocketInit *WebsocketInit, redisInit *RedisInit) *App {
 	return &App{
 		WebsocketInit: websocketInit,
+		RedisInit:     redisInit,
 	}
 }

@@ -5,11 +5,12 @@ import (
 	"github.com/spf13/viper"
 )
 
-var envs = []string{"RABBITMQ_USER", "RABBITMQ_PASSWORD"}
+var envs = []string{"RABBITMQ_USER", "RABBITMQ_PASSWORD", "REDIS"}
 
 type Config struct {
 	BrokerUser string `mapstructure:"RABBITMQ_USER"`
 	BrokerPass string `mapstructure:"RABBITMQ_PASSWORD"`
+	RedisConn  string `mapstructure:"REDIS"`
 }
 
 func InitConfig() (Config, error) {

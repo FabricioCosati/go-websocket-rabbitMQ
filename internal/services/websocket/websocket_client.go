@@ -20,6 +20,7 @@ type WebsocketClientService interface {
 type WebsocketClientServiceImpl struct{}
 
 type Client struct {
+	Id   int
 	Conn *websocket.Conn
 	Send chan []byte
 	Hub  *Hub
@@ -39,6 +40,7 @@ type Message struct {
 }
 
 type User struct {
+	Id    int
 	Name  string
 	Photo string
 }
@@ -81,7 +83,6 @@ func (c *Client) SendMessage(ctx *gin.Context, ch *amqp.Channel, wg *sync.WaitGr
 		}
 
 		body.Time = time.Now().Format("15:04")
-		body.User.Photo = "guest.png"
 
 		m, err = json.Marshal(body)
 		if err != nil {

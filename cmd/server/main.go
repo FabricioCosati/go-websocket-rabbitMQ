@@ -23,6 +23,7 @@ func main() {
 	go app.WebsocketInit.Hub.HubRun()
 
 	r := gin.New()
+	routes.InitRedis(r, app)
 	routes.InitWebsocket(r, app)
 	r.Run(":8080")
 }
