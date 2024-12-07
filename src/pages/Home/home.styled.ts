@@ -5,7 +5,7 @@ const size = {
     mobileS: '320px',
     mobileM: '375px',
     mobileL: '425px',
-    maxSm: '540px',
+    sm: '540px',
     tablet: '768px',
     laptop: '1024px',
     xl: '1140px',
@@ -13,11 +13,11 @@ const size = {
     desktop: '2560px'
 }
 
-export const device = {
+export const Mindevice = {
     mobileS: `(min-width: ${size.mobileS})`,
     mobileM: `(min-width: ${size.mobileM})`,
     mobileL: `(min-width: ${size.mobileL})`,
-    maxSm: `(min-width: ${size.maxSm})`,
+    sm: `(min-width: ${size.sm})`,
     tablet: `(min-width: ${size.tablet})`,
     laptop: `(min-width: ${size.laptop})`,
     xl: `(min-width: ${size.xl})`,
@@ -26,16 +26,29 @@ export const device = {
     desktopL: `(min-width: ${size.desktop})`
 };
 
+export const Maxdevice = {
+    mobileS: `(max-width: ${size.mobileS})`,
+    mobileM: `(max-width: ${size.mobileM})`,
+    mobileL: `(max-width: ${size.mobileL})`,
+    sm: `(max-width: ${size.sm})`,
+    tablet: `(max-width: ${size.tablet})`,
+    laptop: `(max-width: ${size.laptop})`,
+    xl: `(max-width: ${size.xl})`,
+    laptopL: `(max-width: ${size.laptopL})`,
+    desktop: `(max-width: ${size.desktop})`,
+    desktopL: `(max-width: ${size.desktop})`
+};
+
 export const HomepageContainer = styled.div`
     background-color: #212121;
 
     padding-left: 1.25rem;
     padding-right: 1.25rem;
-    @media ${device.maxSm} {
+    @media ${Mindevice.sm} {
         padding-left: 2.5rem;
         padding-right: 2.5rem;
     }
-    @media ${device.xl} {
+    @media ${Mindevice.xl} {
         padding-left: 10rem;
         padding-right: 10rem;
     }
@@ -61,11 +74,58 @@ export const HomepageContainer = styled.div`
 
 // Separar em outro arquivo depois - tudo acima e abaixo
 
+export const HomeChatContainer = styled.div`
+    display: flex;
+`
+
+// Separar em outro arquivo depois - tudo acima e abaixo
+
+export const ChannelsContainer = styled.div`
+    width: 40%;
+    background-color: #232323;
+    
+    @media ${Maxdevice.tablet} {
+        display: none;
+    }
+`
+
+export const ChannelGroupContainer = styled.div`
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    background-color: green;
+    padding: .5rem;
+    cursor: pointer;
+
+    background-color: #1f1f1f;
+`
+
+export const ChannelImageContainer = styled.div`
+    img {
+        width: 30px;
+        height: 30px;
+        background-color: #ececec;
+        border-radius: 50%;
+        margin-top: 0.25rem;
+    }
+`
+
+export const ChannelNameContainer = styled.div`
+    span {
+        color: white;
+        font-weight: bold;
+    }
+`
+
+// Separar em outro arquivo depois - tudo acima e abaixo
+
 export const ChatContainer = styled.div`
    display: flex;
    flex-direction: column;
    justify-content: flex-end;
    height: 100vh;
+   width: 100%;
+   padding-left: 1rem;
 `
 
 // Separar em outro arquivo depois - tudo acima e abaixo

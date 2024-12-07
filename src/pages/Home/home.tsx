@@ -1,11 +1,12 @@
 import useWebSocket from "react-use-websocket"
-import { ChatContainer, HomepageContainer } from "./home.styled"
+import { ChannelsContainer, ChatContainer, HomeChatContainer, HomepageContainer } from "./home.styled"
 import { useFetchMessages } from "../../hooks/useFetchMessages"
 import ChatMessageContainer from "../../components/Message/ChatMessageContainer"
 import ChatFormContainer from "../../components/Message/ChatFormContainer"
 import { useEffect, useState } from "react"
 import axios from "axios"
 import { UserDto } from "../../dtos/user"
+import GroupContainer from "../../components/Channel/GroupContainer"
 
 function Home() {
     const WS_URL = "ws://localhost:8080/ws"
@@ -38,10 +39,15 @@ function Home() {
 
     return (
         <HomepageContainer>
-            <ChatContainer>
-                <ChatMessageContainer messages={messages} />
-                <ChatFormContainer sendJsonMessage={sendJsonMessage} user={user} />
-            </ChatContainer>
+            <HomeChatContainer>
+                <ChannelsContainer>
+                    <GroupContainer />
+                </ChannelsContainer>
+                <ChatContainer>
+                    <ChatMessageContainer messages={messages} />
+                    <ChatFormContainer sendJsonMessage={sendJsonMessage} user={user} />
+                </ChatContainer>
+            </HomeChatContainer>
         </HomepageContainer>
     )
 }
