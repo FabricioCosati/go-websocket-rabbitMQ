@@ -148,6 +148,12 @@ export const MessageContainer = styled.div`
     display: flex;
     gap: 1rem;
     margin: 1rem;
+    position: relative;
+`
+
+export const DropdownContainer = styled(Dropdown)`
+    position: absolute;
+    left: -5px;
 `
 
 export const DropDownMenu = styled(Dropdown.Menu)`

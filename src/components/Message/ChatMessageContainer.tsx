@@ -1,6 +1,5 @@
-import { Dropdown } from "react-bootstrap";
 import { MessageDto } from "../../dtos/message";
-import { DropDownItem, DropDownMenu, MessageContainer, MessagesContainer, MessagesUserPhoto, MessageText, MessageUser } from "../../pages/Home/home.styled";
+import { DropdownContainer, DropDownItem, DropDownMenu, MessageContainer, MessagesContainer, MessagesUserPhoto, MessageText, MessageUser } from "../../pages/Home/home.styled";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { useState } from "react";
 import { UserDto } from "../../dtos/user";
@@ -28,11 +27,11 @@ export default function ChatMessageContainer({ messages, user }: Props) {
             {messages && messages.map((message: MessageDto, index: number) => (
                 <MessageContainer key={index} onClick={() => handleUserOpt(index)}>
                     {messageIndex === index && user.Id !== message.User.Id && (
-                        <Dropdown show={showUserOpt} onToggle={(isOpen) => setShowUserOpt(isOpen)}>
+                        <DropdownContainer show={showUserOpt} onToggle={(isOpen) => setShowUserOpt(isOpen)}>
                             <DropDownMenu show>
                                 <DropDownItem onClick={() => getUserData(message)}>Enviar Mensagem</DropDownItem>
                             </DropDownMenu>
-                        </Dropdown>
+                        </DropdownContainer>
                     )}
                     <MessagesUserPhoto>
                         <img src={require("../../imgs/" + message.User.Photo)} alt="guest-user" />
