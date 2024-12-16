@@ -1,4 +1,5 @@
 import { Button } from "@mui/material";
+import { Dropdown } from "react-bootstrap";
 import styled from "styled-components";
 
 const size = {
@@ -147,6 +148,26 @@ export const MessageContainer = styled.div`
     display: flex;
     gap: 1rem;
     margin: 1rem;
+`
+
+export const DropDownMenu = styled(Dropdown.Menu)`
+    background-color: #2f2f2f; 
+`
+
+export const DropDownItem = styled(Dropdown.Item)`
+    color: white; 
+    background-color: transparent; 
+
+    &:hover {
+        background-color: #2f2f2f; 
+        color: #b8b8b8; 
+    }
+
+    &:active,  &.active,  &:focus {
+        background-color: #2f2f2f;
+        color: white;
+        box-shadow: none;
+    }
 `
 
 export const MessagesUserPhoto = styled.div`

@@ -1,15 +1,39 @@
+import { Dropdown } from "react-bootstrap";
 import { MessageDto } from "../../dtos/message";
-import { MessageContainer, MessagesContainer, MessagesUserPhoto, MessageText, MessageUser } from "../../pages/Home/home.styled";
+import { DropDownItem, DropDownMenu, MessageContainer, MessagesContainer, MessagesUserPhoto, MessageText, MessageUser } from "../../pages/Home/home.styled";
+import 'bootstrap/dist/css/bootstrap.min.css';
+import { useState } from "react";
+import { UserDto } from "../../dtos/user";
 
 type Props = {
     messages: MessageDto[]
+    user: UserDto
 }
 
-export default function ChatMessageContainer({ messages }: Props) {
+export default function ChatMessageContainer({ messages, user }: Props) {
+    const [messageIndex, setMessageIndex] = useState<number | null>(null);
+    const [showUserOpt, setShowUserOpt] = useState<boolean>(false);
+
+    function handleUserOpt(key: number) {
+        setMessageIndex((prev) => (prev === key ? null : key))
+        setShowUserOpt(true)
+    }
+
+    function getUserData(message: MessageDto) {
+        setShowUserOpt(false)
+    }
+
     return (
         <MessagesContainer>
             {messages && messages.map((message: MessageDto, index: number) => (
-                <MessageContainer key={index}>
+                <MessageContainer key={index} onClick={() => handleUserOpt(index)}>
+                    {messageIndex === index && user.Id !== message.User.Id && (
+                        <Dropdown show={showUserOpt} onToggle={(isOpen) => setShowUserOpt(isOpen)}>
+                            <DropDownMenu show>
+                                <DropDownItem onClick={() => getUserData(message)}>Enviar Mensagem</DropDownItem>
+                            </DropDownMenu>
+                        </Dropdown>
+                    )}
                     <MessagesUserPhoto>
                         <img src={require("../../imgs/" + message.User.Photo)} alt="guest-user" />
                     </MessagesUserPhoto>

@@ -44,7 +44,7 @@ function Home() {
                     <GroupContainer />
                 </ChannelsContainer>
                 <ChatContainer>
-                    <ChatMessageContainer messages={messages} />
+                    <ChatMessageContainer messages={messages} user={user} />
                     <ChatFormContainer sendJsonMessage={sendJsonMessage} user={user} />
                 </ChatContainer>
             </HomeChatContainer>
